@@ -17,6 +17,7 @@ export default function PaginaProducto({producto,variaciones,precioDolar,agregar
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
+
   const [selectedColor, setSelectedColor] = useState(producto.color_cuadrante);
 
   useEffect(() => {
@@ -82,7 +83,7 @@ export default function PaginaProducto({producto,variaciones,precioDolar,agregar
                   </motion.div>
                 ))}
               </VStack>
-              <Image className='imagenPdp' src={selectedImage} boxSize="400px" objectFit="cover" />
+              <Image src={selectedImage}  boxSize={["200px", null, "450px"]} objectFit="cover" />
             </HStack>
 
             <motion.div

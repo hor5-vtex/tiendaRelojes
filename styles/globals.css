@@ -108,10 +108,11 @@ a {
 
 @media (max-width: 765px) {
   .imagenPdp{
-    max-width: 250px;
-    max-height: 300px;
-    width: 250px;
-    height: 300px;
-    border-radius: 30px;
+    max-width: 250px!important;
+    max-height: 300px!important;
+    width: 250px!important;
+    height: 300px!important;
+    border-radius: 30px!important;
   }
+
 }
