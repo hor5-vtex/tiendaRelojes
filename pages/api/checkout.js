@@ -2,6 +2,7 @@
 
 import nodemailer from "nodemailer";
 
+
 export default async function handler(req, res) {
   let transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -28,14 +29,39 @@ export default async function handler(req, res) {
     ) {
       res.status(400).json({ message: 'Bad Request' });
     } else {
+      let total=0
       const message = {
         from: process.env.GMAIL_EMAIL_ADDRESS,
         to: data.txtEmail,
-        subject: 'Confirmación de compra - TIENDA TIEMPO ',
+        subject: '✅ Confirmación de compra - TIENDA TIEMPO ',
         text: 'prueba',
         html: `<h1>Confirmación de compra</h1
                 <h3>Gracias ${data.txtNombre} por tu compra!</h3>
-                <h5>Pronto te estaremos enviando tu pedido a ${data.txtDireccion} ${data.txtCiudad}, CP ${data.txtCod_postal}</h5>`,
+                <h4>Pronto te estaremos enviando tu pedido a ${data.txtDireccion} ${data.txtCiudad}, CP ${data.txtCod_postal}</h4>
+                <h3>🛒 Resumen de tu compra</h3>
+                
+
+              ${data.productos&& data.productos.map(producto=>
+                
+                `<table style= "background-color:#E5E4E2; border-radius:30px">
+                <tr>
+                  <th></th>
+                  <th>Producto</th>
+                  <th>Precio</th>
+                  <th>Unidades</th>
+                  <th>Subtotal</th>
+                </tr>
+                <tr>
+                  <td><img src=${producto.imagenes[0]} with="100px" height="100px" style="border-radius:50%"/></td>
+                  <td>${producto.nombre}</td>
+                  <td>$${producto.precio}</td>
+                  <td>${producto.cantidad}</td>
+                  <td>$${producto.precio *producto.cantidad}</td>
+                </tr>
+              
+                   <p style="display:none">${total+=(producto.precio *producto.cantidad)}</p>
+                </table>`)}
+                <h2>Total $${total}</h2>`
       };
 
       try {

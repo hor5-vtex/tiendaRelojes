@@ -323,7 +323,7 @@ const Form3 = ({handleChange,values}) => {
   );
 };
 
-export default function CheckoutForm({completarCompra}) {
+export default function CheckoutForm({completarCompra,productosCarrito}) {
   const router = useRouter();
   const toast = useToast();
   const [step, setStep] = useState(1);
@@ -349,6 +349,7 @@ export default function CheckoutForm({completarCompra}) {
       isLoading:true
     })
     )
+    values.productos= productosCarrito
     await sendFormData(values)
   }
 
