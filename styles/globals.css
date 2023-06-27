@@ -105,3 +105,13 @@ a {
     color-scheme: dark;
   }
 }
+
+@media (max-width: 765px) {
+  .imagenPdp{
+    max-width: 250px;
+    max-height: 300px;
+    width: 250px;
+    height: 300px;
+    border-radius: 30px;
+  }
+}
