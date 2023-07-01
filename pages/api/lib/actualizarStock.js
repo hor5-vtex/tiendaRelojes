@@ -1,5 +1,5 @@
-export const actualizarStock = async (data )=> fetch('/api/stock',{
-    method: "PUT",
+export const actualizarStock = async (data)=> fetch('/api/stock',{
+    method: "POST",
     body: JSON.stringify(data),
     headers:
     {

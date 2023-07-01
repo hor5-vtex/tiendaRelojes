@@ -83,7 +83,7 @@ export default function PaginaProducto({producto,variaciones,precioDolar,agregar
                   </motion.div>
                 ))}
               </VStack>
-              <Image src={selectedImage}  boxSize={["200px", null, "450px"]} objectFit="cover" />
+              <Image src={selectedImage}  boxSize={["200px", null, "45  0px"]} objectFit="cover" />
             </HStack>
 
             <motion.div

@@ -92,11 +92,24 @@ export default function Subcategoria({Skus,subcategoria,status,productosCarrito,
 }
 
 export const getStaticPaths = async () => {
+  const options = {
+    method: 'GET'
+  };
+const baseUrl ="https://tienda-tiempo.vercel.app/"
+const res = await fetch(baseUrl+'/api/subcategorias',options)
+const subcategorias = await res.json();
 
+
+const paths = subcategorias.map(cat => {
   return {
-    paths:[],
-    fallback: false
+    params: { nombreSubcategoria: cat.nombre.toString() }
   }
+})
+
+return {
+  paths,
+  fallback: false
+}
 
 }
 export async function getStaticProps(context) {

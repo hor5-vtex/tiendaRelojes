@@ -13,17 +13,18 @@ export default function Checkout({productosCarrito,total,vaciarCarrito}){
     const deleteTotal = ()=>{
         productosCarrito.pop()
     }
-    const descontarDeStock = ()=>{
+    const descontarDeStock = (productosCarrito)=>{
         productosCarrito.forEach(producto => {
             producto.stock -= producto.cantidad
             //delete producto.cantidad
-            //endpoint put
-            //actualizarStock(producto)
+            //endpoint put            
         });
+        actualizarStock(productosCarrito)
     }
     const completarCompra = (router)=>{
         deleteTotal()
         vaciarCarrito()
+        descontarDeStock(productosCarrito)
         router.push('/')
     }
 
@@ -37,7 +38,7 @@ export default function Checkout({productosCarrito,total,vaciarCarrito}){
             m={2}
             icon={<ChevronLeftIcon />}
             onClick={() => { 
-                    completarCompra(router)
+                    router.push('/')
                   }
                 }
             />

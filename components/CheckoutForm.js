@@ -197,7 +197,8 @@ const Form2 = ({handleChange,values}) => {
           Codigo Postal
         </FormLabel>
         <Input
-          type= "number"
+          maxlength="5"
+          type= "tel"
           name="txtCod_postal"
           id="postal_code"
           autoComplete="postal-code"
@@ -279,7 +280,7 @@ const Form3 = ({handleChange,values}) => {
               <FcUnlock/>
             </InputLeftAddon>
             <Input
-              type="number"
+              type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="16"
               placeholder="XXXX XXXX XXXX XXXX"
               focusBorderColor="brand.400"
               rounded="md"
@@ -299,7 +300,8 @@ const Form3 = ({handleChange,values}) => {
             <FormLabel htmlFor="vencimiento" fontWeight={'normal'}>
                 MM/YY
             </FormLabel>
-            <Input id="vencimiento" placeholder="XX/XX" 
+            <Input id="vencimiento" placeholder="XX/XX"
+              maxlength="5"
               name="txtVencimiento"
               value={values.txtVencimiento}
               onChange={handleChange}
@@ -310,7 +312,8 @@ const Form3 = ({handleChange,values}) => {
             <FormLabel htmlFor="codigoSeguridad" fontWeight={'normal'}>
                 CVV
             </FormLabel>
-            <Input id="codigoSeguridad" placeholder="XXX" 
+            <Input id="codigoSeguridad" placeholder="XXX"
+              maxlength="4" 
               name="txtCod_Seguridad"
               value={values.txtCod_Seguridad}
               onChange={handleChange}

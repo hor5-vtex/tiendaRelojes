@@ -3,8 +3,9 @@ import Layout from '@/components/Layout';
 import { ChakraProvider } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react'
+import {SessionProvider} from 'next-auth/react'
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps ,session}) {
   
   const [carrito, setCarrito]= useState([])
 
@@ -91,12 +92,15 @@ function MyApp({ Component, pageProps }) {
 
 
   return (
-    <ChakraProvider>
-        <Component {...pageProps} productosCarrito={carrito} 
-          agregarCarrito={agregarCarrito} 
-          eliminarDeCarrito={eliminarDeCarrito}
-          vaciarCarrito={vaciarCarrito}/>
-    </ChakraProvider>
+    <SessionProvider session={session}>
+
+      <ChakraProvider>
+          <Component {...pageProps} productosCarrito={carrito} 
+            agregarCarrito={agregarCarrito} 
+            eliminarDeCarrito={eliminarDeCarrito}
+            vaciarCarrito={vaciarCarrito}/>
+      </ChakraProvider>
+    </SessionProvider>
   )
 }
 
