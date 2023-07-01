@@ -105,14 +105,7 @@ const paths = subcategorias.map(cat => {
     params: { nombreSubcategoria: cat.nombre.toString() }
   }
 })*/
-paths = {
-  params:{
-    nombreSubcategoria: 'Diver',
-    nombreSubcategoria: 'Cronografo',
-    nombreSubcategoria: 'Pulseras de cuero',
-    nombreSubcategoria: 'Estuches de viaje',
-  }
-}
+paths = {}
 
 return {
   paths,
