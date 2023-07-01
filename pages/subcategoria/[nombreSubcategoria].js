@@ -92,11 +92,11 @@ export default function Subcategoria({Skus,subcategoria,status,productosCarrito,
 }
 
 export const getStaticPaths = async () => {
-  const options = {
+/*  const options = {
     method: 'GET'
   };
-const baseUrl ="http://localhost:3000"
-const res = await fetch('/api/subcategorias',options)
+const baseUrl ="https://tienda-tiempo.vercel.app"
+const res = await fetch(baseUrl+'/api/subcategorias',options)
 const subcategorias = await res.json();
 
 
@@ -104,7 +104,15 @@ const paths = subcategorias.map(cat => {
   return {
     params: { nombreSubcategoria: cat.nombre.toString() }
   }
-})
+})*/
+paths = {
+  params:{
+    nombreSubcategoria: 'Diver',
+    nombreSubcategoria: 'Cronografo',
+    nombreSubcategoria: 'Pulseras de cuero',
+    nombreSubcategoria: 'Estuches de viaje',
+  }
+}
 
 return {
   paths,
