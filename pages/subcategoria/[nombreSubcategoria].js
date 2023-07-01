@@ -95,7 +95,7 @@ export const getStaticPaths = async () => {
   const options = {
     method: 'GET'
   };
-const baseUrl ="https://tienda-tiempo.vercel.app/"
+const baseUrl ="https://tienda-tiempo.vercel.app"
 const res = await fetch(baseUrl+'/api/subcategorias',options)
 const subcategorias = await res.json();
 
