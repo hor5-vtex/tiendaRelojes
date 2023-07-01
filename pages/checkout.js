@@ -19,12 +19,12 @@ export default function Checkout({productosCarrito,total,vaciarCarrito}){
             //delete producto.cantidad
             //endpoint put            
         });
-        actualizarStock(productosCarrito)
+        //actualizarStock(productosCarrito)
     }
     const completarCompra = (router)=>{
         deleteTotal()
         vaciarCarrito()
-        descontarDeStock(productosCarrito)
+        //descontarDeStock(productosCarrito)
         router.push('/')
     }
 
