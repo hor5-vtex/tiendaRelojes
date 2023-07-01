@@ -104,13 +104,20 @@ const paths = subcategorias.map(cat => {
   return {
     params: { nombreSubcategoria: cat.nombre.toString() }
   }
-})*/
-paths = {}
+})
 
 return {
   paths,
   fallback: false
 }
+
+}*/
+export const getStaticPaths = async () => {
+
+  return {
+    paths:[],
+    fallback: false
+  }
 
 }
 export async function getStaticProps(context) {
