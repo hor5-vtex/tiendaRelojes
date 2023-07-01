@@ -91,8 +91,8 @@ export default function Subcategoria({Skus,subcategoria,status,productosCarrito,
   )
 }
 
-export const getStaticPaths = async () => {
-/*  const options = {
+/* export const getStaticPaths = async () => {
+ const options = {
     method: 'GET'
   };
 const baseUrl ="https://tienda-tiempo.vercel.app"
