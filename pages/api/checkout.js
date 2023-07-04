@@ -19,8 +19,13 @@ export default async function handler(req, res) {
       !data.txtNombre ||
       !data.txtApellido ||
       !data.txtEmail ||
+      !data.txtDni||
+      !data.txtTelefono||
       !data.txtCiudad ||
-      !data.txtDireccion ||
+      !data.txtCalle ||
+      !data.txtAltura||
+      !data.txtPiso||
+      !data.txtDepartamento||
       !data.txtCod_postal ||
       !data.txtTitular ||
       !data.txtNumTarjeta ||
@@ -37,7 +42,7 @@ export default async function handler(req, res) {
         text: 'prueba',
         html: `<h1>Confirmación de compra</h1
                 <h3>Gracias ${data.txtNombre} por tu compra!</h3>
-                <h4>Pronto te estaremos enviando tu pedido a ${data.txtDireccion} ${data.txtCiudad}, CP ${data.txtCod_postal}</h4>
+                <h4>Pronto te estaremos enviando tu pedido a ${data.txtCalle} ${data.txtAltura} ${data.txtPiso&&data.txtPiso} ${data.txtDepartamento&&data.txtDepartamento} ${data.txtCiudad}, CP ${data.txtCod_postal}</h4>
                 <h3>🛒 Resumen de tu compra</h3>
                 
 
@@ -61,8 +66,39 @@ export default async function handler(req, res) {
               
                    <p style="display:none">${total+=(producto.precio *producto.cantidad)}</p>
                 </table>`)}
-                <h2>Total $${total}</h2>`
+                <h2 style="padding:10px; background:black; color:white; border-radius:10px;">Total $${total}</h2>`
       };
+
+      const requestBody = {
+        cliente: {
+          nombre: `${data.txtNombre} ${data.txtApellido}`,
+          dni: data.txtDni,
+          telefono: data.txtTelefono,
+          email: data.txtEmail,
+          direccion: {
+            calle: data.txtCalle,
+            altura: parseInt(data.txtAltura, 10),
+            piso: parseInt(data.txtPiso, 10),
+            departamento: data.txtDepartamento,
+            codigo_postal: parseInt(data.txtCod_postal, 10),
+            aclaraciones: data.txtAclaraciones,
+            provincia: data.txtCiudad
+          }
+        },
+        detalleDelPedido: []
+      };
+
+      requestBody.detalleDelPedido = data.productos.map(producto => ({
+        producto: producto.nombre,
+        idProducto: parseInt(producto.idSku, 10),
+        imagen_producto: producto.imagenes[0],
+        precio_unitario: parseFloat(producto.precio),
+        unidades_compradas: parseInt(producto.cantidad, 10),
+        subtotal: parseFloat((producto.precio *producto.cantidad))
+      }));
+
+      console.log(JSON.stringify(requestBody))
+      
 
       try {
         await new Promise((resolve, reject) => {
@@ -82,6 +118,27 @@ export default async function handler(req, res) {
         console.log(error);
         res.status(404).json({ error: `Connection refused at ${error.address}` });
       }
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'x-app-token': process.env.API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      };
+      
+      
+      await fetch('https://hor5.bsite.net/api/pedidos/create', options)
+        .then(async response => {
+          console.log(await response.json())
+        })
+        .catch(async error => {
+          console.log("Algo salió mal>>")
+          console.log(await error.message)
+        });
+
+
     }
   } else {
     res.status(405).json({ message: 'Method Not Allowed' });

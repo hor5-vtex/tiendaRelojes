@@ -1,8 +1,13 @@
 import Sidebar from "@/components/AdminComponents/AdminSidebar";
-import { Center,Heading } from "@chakra-ui/react";
+import ShowPedido from "@/components/AdminComponents/Pedidos/ShowPedido";
+import { Center,
+       Heading,
+       Text
+    } from "@chakra-ui/react";
 import { useSession,getSession } from "next-auth/react";
 
-export default function PedidosPage(){
+
+export default function PedidosPage({pedidos}){
     const{data:session} = useSession();
     return(
         <>
@@ -11,10 +16,21 @@ export default function PedidosPage(){
             <Center>
                 <Heading>Pedidos</Heading>
             </Center>
+            {pedidos.length!=0?
+            pedidos.map(pedido=>
+              <ShowPedido pedido={pedido}/>
+            )
+          :
+          <Text>
+            Todavia no hay ningun pedido.  
+          </Text>}
+            
+
         </Sidebar>
         </>
     );
 }
+
 
 export const getServerSideProps = async (context)=>{
     const options = {
@@ -24,9 +40,9 @@ export const getServerSideProps = async (context)=>{
       }
   };
 
-  /*var url = `https://hor5.bsite.net/api/pedidos/all`
+  var url = `https://hor5.bsite.net/api/pedidos/all`
   const res = await fetch(url, options)
-  const data = await res.json()*/
+  const data = await res.json()
 
 
     const session = await getSession(context);
@@ -40,7 +56,8 @@ export const getServerSideProps = async (context)=>{
     
     return{
       props: {
-        session
+        session,
+        pedidos:data
             }
     }
   }

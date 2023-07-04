@@ -18,6 +18,7 @@ import {
   Textarea,
   FormHelperText,
   InputRightElement,
+  Text
 } from '@chakra-ui/react';
 
 import {FcUnlock,FcReadingEbook} from "react-icons/fc";
@@ -30,8 +31,14 @@ const initValues ={
   txtNombre:"",
   txtApellido: "",
   txtEmail: "",
+  txtTelefono: "",
+  txtDni: "",
   txtCiudad:"",
-  txtDireccion:"",
+  txtCalle:"",
+  txtAltura:"",
+  txtPiso:"",
+  txtDepartamento:"",
+  txtAclaraciones:"",
   txtCod_postal:"",
   txtTitular:"",
   txtNumTarjeta:"",
@@ -70,6 +77,31 @@ const Form1 = ({handleChange,values}) => {
            errorBorderColor='red.100'
            borderColor='green.300'
           name='txtApellido' value={values.txtApellido} onChange={handleChange} required />
+        </FormControl>
+      </Flex>
+      <Flex mt={2}>
+        <FormControl mr="5%" isRequired isInvalid={!values.txtDni}>
+          <FormLabel htmlFor="dni" fontWeight={'normal'}>
+            DNI
+          </FormLabel>
+          <Input id="dni" placeholder="37650111"
+          errorBorderColor='red.100'
+          borderColor='green.300'
+          type='tel'
+          maxLength='8'
+          name='txtDni' value={values.txtDni} onChange={handleChange} required />
+        </FormControl>
+
+        <FormControl isRequired isInvalid={!values.txtTelefono}>
+          <FormLabel htmlFor="telefono" fontWeight={'normal'}>
+            Telefono
+          </FormLabel>
+          <Input id="telefono" placeholder="1155662244"
+           errorBorderColor='red.100'
+           borderColor='green.300'
+           type='tel'
+           maxlength='11'
+          name='txtTelefono' value={values.txtTelefono} onChange={handleChange} required />
         </FormControl>
       </Flex>
       <FormControl mt="2%" isRequired isInvalid={!values.txtEmail}>
@@ -120,7 +152,7 @@ const Form2 = ({handleChange,values}) => {
         </Select>
       </FormControl>
 
-      <FormControl as={GridItem} colSpan={[6, 6, null, 2]} isRequired isInvalid={!values.txtCiudad}>
+      <FormControl  mb={3} as={GridItem} colSpan={[6, 6, null, 2]} isRequired isInvalid={!values.txtCiudad}>
         <FormLabel
           htmlFor="city"
           fontSize="sm"
@@ -153,35 +185,59 @@ const Form2 = ({handleChange,values}) => {
         </Select>
       </FormControl>
 
-      <FormControl as={GridItem} colSpan={6} isRequired isInvalid={!values.txtDireccion}>
-        <FormLabel
-          htmlFor="street_address"
-          fontSize="sm"
-          fontWeight="md"
-          color="gray.700"
-          _dark={{
-            color: 'gray.50',
-          }}
-          mt="2%">
-          Dirección completa
-        </FormLabel>
-        <Input
-          type="text"
-          name="txtDireccion"
-          id="street_address"
-          autoComplete="street-address"
-          focusBorderColor="brand.400"
-          shadow="sm"
-          size="sm"
-          w="full"
-          rounded="md"
-          placeholder='ej: Alvarez Thomas 1675, 6to 3'
-          value={values.txtDireccion}
-          onChange={handleChange}
+      <Text size='md' as='b'>Dirección</Text>
+      <Flex mt={1}>
+        <FormControl mr="5%" isRequired isInvalid={!values.txtCalle}>
+          <FormLabel htmlFor="calle" fontWeight={'normal'}>
+            Calle
+          </FormLabel>
+          <Input id="calle" placeholder="Av Mitre"
           errorBorderColor='red.100'
           borderColor='green.300'
-        />
-      </FormControl>
+          type='text'
+          maxLength='35'
+          name='txtCalle' value={values.txtCalle} onChange={handleChange} required />
+        </FormControl>
+
+        <FormControl isRequired isInvalid={!values.txtAltura}>
+          <FormLabel htmlFor="altura" fontWeight={'normal'}>
+            Altura
+          </FormLabel>
+          <Input id="altura" placeholder="1256"
+           errorBorderColor='red.100'
+           borderColor='green.300'
+           type='number'
+           max='20000'
+           min='0'
+          name='txtAltura' value={values.txtAltura} onChange={handleChange} required />
+        </FormControl>
+      </Flex>
+      <Flex mt={1}>
+        <FormControl mr="5%" isRequired isInvalid={!values.txtPiso}>
+          <FormLabel htmlFor="piso" fontWeight={'normal'}>
+            Piso
+          </FormLabel>
+          <Input id="piso" placeholder="6"
+          errorBorderColor='red.100'
+          borderColor='green.300'
+          type='number'
+          max='56'
+          min='0'
+          name='txtPiso' value={values.txtPiso} onChange={handleChange} required />
+        </FormControl>
+
+        <FormControl isRequired isInvalid={!values.txtDepartamento}>
+          <FormLabel htmlFor="departamento" fontWeight={'normal'}>
+            Departamento
+          </FormLabel>
+          <Input id="departamento" placeholder="B"
+           errorBorderColor='red.100'
+           borderColor='green.300'
+           type='text'
+           maxlength='3'
+          name='txtDepartamento' value={values.txtDepartamento} onChange={handleChange} required />
+        </FormControl>
+      </Flex>
 
 
       <FormControl as={GridItem} colSpan={[6, 3, null, 2]} isRequired isInvalid={!values.txtCod_postal}>
@@ -198,7 +254,7 @@ const Form2 = ({handleChange,values}) => {
         </FormLabel>
         <Input
           maxlength="5"
-          type= "tel"
+          type= "number"
           name="txtCod_postal"
           id="postal_code"
           autoComplete="postal-code"
@@ -417,14 +473,20 @@ export default function CheckoutForm({completarCompra,productosCarrito}) {
                 isDisabled={
                   !values.txtNombre ||
                   !values.txtApellido ||
+                  !values.txtDni||
+                  !values.txtTelefono||
                   !values.txtEmail ||
                   !values.txtCiudad ||
-                  !values.txtDireccion||
+                  !values.txtCalle||
+                  !values.txtAltura ||
+                  !values.txtPiso ||
+                  !values.txtDepartamento ||
                   !values.txtCod_postal ||
                   !values.txtTitular ||
                   !values.txtNumTarjeta ||
                   !values.txtVencimiento ||
-                  !values.txtCod_Seguridad
+                  !values.txtCod_Seguridad ||
+                  productosCarrito.length==0
                 }
                 onClick={() => {
                   toast({

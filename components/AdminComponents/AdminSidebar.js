@@ -22,6 +22,7 @@ import {
 } from 'react-icons/fi';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
+import { FiPower } from 'react-icons/fi';
 
 const LinkItems= [
   { name: 'Productos', icon: FiSmartphone,redireccion:"/admin/productos" },
@@ -86,7 +87,7 @@ const SidebarContent = ({ session,onClose, ...rest }) => {
         </NavItem>
       ))}
       
-      <Button mt={60} ml={5} onClick={()=>{signOut()}}>cerrar sesión</Button>
+      <Button mt={60} ml={5} onClick={()=>{signOut()}}>cerrar sesión  <FiPower/></Button>
     </Box>
   );
 };
