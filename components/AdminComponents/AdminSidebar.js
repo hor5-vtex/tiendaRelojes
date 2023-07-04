@@ -87,7 +87,7 @@ const SidebarContent = ({ session,onClose, ...rest }) => {
         </NavItem>
       ))}
       
-      <Button mt={60} ml={5} onClick={()=>{signOut()}}>cerrar sesión  <FiPower/></Button>
+      <Button mt={40} ml={5} onClick={()=>{signOut()}}>cerrar sesión  <FiPower/></Button>
     </Box>
   );
 };
