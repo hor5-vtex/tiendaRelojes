@@ -114,12 +114,29 @@ return {
 }*/
 export const getStaticPaths = async () => {
 
+  const options = {
+      method: 'GET',
+      headers: {
+        'x-app-token': process.env.API_KEY
+      }
+    };
+var url='https://hor5.bsite.net/api/subcategorias/all'
+const res = await fetch(url, options)
+const categorias = await res.json();
+
+const paths = categorias.map(cat => {
   return {
-    paths:[],
-    fallback: false
+    params: { nombreSubcategoria: cat.nombre.toString() }
   }
+})
+
+return {
+  paths,
+  fallback: false
+}
 
 }
+
 export async function getStaticProps(context) {
   // Obtener los datos de la API
     const subcategoriaNombre = context.params.nombreSubcategoria

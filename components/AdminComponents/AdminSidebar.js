@@ -5,13 +5,11 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Link,
   Drawer,
   DrawerContent,
   Text,
   useDisclosure,
-  BoxProps,
-  FlexProps,
+  Button
 } from '@chakra-ui/react';
 import {
     FiSmartphone,
@@ -20,19 +18,22 @@ import {
     FiLayers,
     FiTruck,
   FiMenu,
+  FiUsers
 } from 'react-icons/fi';
-import { IconType } from 'react-icons';
-import { ReactText } from 'react';
+import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
 
 const LinkItems= [
-  { name: 'Productos', icon: FiSmartphone },
-  { name: 'SKU', icon: FiShoppingBag },
-  { name: 'Categorias', icon: FiLayers },
-  { name: 'Marcas', icon: FiTag },
-  { name: 'Pedidos', icon: FiTruck },
+  { name: 'Productos', icon: FiSmartphone,redireccion:"/admin/productos" },
+  { name: 'SKU', icon: FiShoppingBag ,redireccion:"/admin/skus"},
+  { name: 'Categorias', icon: FiLayers,redireccion:"/admin/categorias" },
+  { name: 'Marcas', icon: FiTag,redireccion:"/admin/marcas" },
+  { name: 'Pedidos', icon: FiTruck, redireccion:"/admin/pedidos" },
+  { name: 'Clientes', icon: FiUsers, redireccion:"/admin/clientes" },
 ];
 
 export default function Sidebar({ children }) {
+  const {data: session}= useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
@@ -49,7 +50,7 @@ export default function Sidebar({ children }) {
         onOverlayClick={onClose}
         size="full">
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} session={session}/>
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
@@ -62,7 +63,8 @@ export default function Sidebar({ children }) {
 }
 
 
-const SidebarContent = ({ onClose, ...rest }) => {
+const SidebarContent = ({ session,onClose, ...rest }) => {
+  console.log(session)
   return (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
@@ -79,17 +81,19 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} redireccion={link.redireccion}>
           {link.name}
         </NavItem>
       ))}
+      
+      <Button mt={60} ml={5} onClick={()=>{signOut()}}>cerrar sesión</Button>
     </Box>
   );
 };
 
-const NavItem = ({ icon, children, ...rest }) => {
+const NavItem = ({redireccion, icon, children, ...rest }) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link href={redireccion} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
         p="4"
@@ -137,8 +141,8 @@ const MobileNav = ({ onOpen, ...rest }) => {
         icon={<FiMenu />}
       />
 
-      <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
+      <Text fontSize="2xl" ml="8" fontWeight="bold">
+        Admin
       </Text>
     </Flex>
   );
