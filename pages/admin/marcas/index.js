@@ -8,6 +8,7 @@ import { useSession,getSession } from "next-auth/react";
 
 export default function MarcasPage({marcas}) {
   const {data:session} = useSession();
+  
   return (
     <>
         <Sidebar>

@@ -9,6 +9,7 @@ import { useSession,getSession } from "next-auth/react";
 
 export default function PedidosPage({pedidos}){
     const{data:session} = useSession();
+    
     return(
         <>
         <Sidebar>

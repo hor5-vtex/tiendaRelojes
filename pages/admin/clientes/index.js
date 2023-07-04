@@ -1,9 +1,12 @@
 import Sidebar from "@/components/AdminComponents/AdminSidebar";
-import { Center,Heading } from "@chakra-ui/react";
+import ClienteCard from "@/components/AdminComponents/Clientes/ClienteCard";
+import { Center,Heading,Flex,Avatar,Box,Badge,Text, HStack } from "@chakra-ui/react";
 import { useSession,getSession } from "next-auth/react";
 
-export default function ClientesPage(){
+
+export default function ClientesPage({clientes}){
     const{data:session} = useSession();
+    
     return(
         <>
         <Sidebar>
@@ -11,6 +14,17 @@ export default function ClientesPage(){
             <Center>
                 <Heading>Clientes</Heading>
             </Center>
+            {
+              clientes?
+              clientes.map(cliente=>
+                <Center key={cliente.idCliente}>
+                  <ClienteCard  cliente={cliente}/>
+                </Center>
+              )
+              :
+              <Text>No hay Clientes cargados Todavia</Text>
+            }
+
         </Sidebar>
         </>
     );
@@ -23,9 +37,9 @@ export const getServerSideProps = async (context)=>{
       }
   };
 
-  /*var url = `https://hor5.bsite.net/api/clientes/all`
+  var url = `https://hor5.bsite.net/api/clientes/all`
   const res = await fetch(url, options)
-  const data = await res.json()*/
+  const data = await res.json()
 
 
     const session = await getSession(context);
@@ -39,7 +53,8 @@ export const getServerSideProps = async (context)=>{
     
     return{
       props: {
-        session
+        session,
+        clientes:data
             }
     }
   }

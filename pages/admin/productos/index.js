@@ -8,6 +8,7 @@ import { useEffect } from "react";
 export default function ProductoPage({productos}){
   useEffect(()=>{},productos)
   const {data: session, status }= useSession();
+  
     return(
         <>
         <Sidebar>
