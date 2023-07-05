@@ -44,11 +44,11 @@ import {
               w={'full'}
               bg={useColorModeValue('white', 'gray.800')}
               boxShadow={'2xl'}
-              rounded={'lg'}
+              rounded={'xl'}
               pos={'relative'}
               zIndex={1}>
               <Box
-                rounded={'lg'}
+                rounded={'xl'}
                 mt={-12}
                 pos={'relative'}
                 height={'230px'}
@@ -72,7 +72,6 @@ import {
 
                   
                 <Image
-                  rounded={'xl'}
                   height={230}
                   width={282}
                   objectFit={'contain'}
@@ -89,12 +88,18 @@ import {
                 <Heading fontSize={'md'} fontFamily={'body'} fontWeight={500}>
                   {Sku.nombre}
                 </Heading>
+                <Badge fontSize={'sm'} p='2'>
+                    ID producto padre #{Sku.idProducto} 
+                </Badge>
                 <Stack direction={'row'} align={'center'}>
                   <Text fontWeight={800} fontSize={'xl'}>
                     $ {Sku.precio.toLocaleString('en-US', { style: 'currency', currency: 'ARG', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </Text>
   
                 </Stack>
+                  <Text fontWeight={800} fontSize={'md'}>
+                    Disponibilidad {Sku.stock} unidades.
+                  </Text>
               </Stack>
             <Center m={2}>
                 <Popover>

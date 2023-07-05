@@ -70,12 +70,15 @@ export default async function handler(req, res) {
       };
 
       const requestBody = {
+        idPedido:0,
         cliente: {
+          idCliente:0,
           nombre: `${data.txtNombre} ${data.txtApellido}`,
           dni: data.txtDni,
           telefono: data.txtTelefono,
           email: data.txtEmail,
           direccion: {
+            idDireccion:0,
             calle: data.txtCalle,
             altura: parseInt(data.txtAltura, 10),
             piso: parseInt(data.txtPiso, 10),
