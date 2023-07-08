@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Progress,
   Box,
@@ -18,7 +18,16 @@ import {
   Textarea,
   FormHelperText,
   InputRightElement,
-  Text
+  Text,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  Center,
+  VStack,
 } from '@chakra-ui/react';
 
 import {FcUnlock,FcReadingEbook} from "react-icons/fc";
@@ -26,6 +35,10 @@ import {FcUnlock,FcReadingEbook} from "react-icons/fc";
 import { useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { sendFormData } from '@/pages/api/lib/api';
+import { useForm } from 'react-hook-form';
+import { CiUndo } from 'react-icons/ci';
+import useSWR from 'swr';
+
 
 const initValues ={
   txtNombre:"",
@@ -49,78 +62,91 @@ const initState = {
   values: initValues
 }
 
-const Form1 = ({handleChange,values}) => {
+
+
+
+const Form1 = ({handleChange,values,ClienteEncontrado,emailModal}) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
-  
+
+
   return (
     <>
       <Heading w="100%" textAlign={'center'} fontWeight="normal" mb="2%">
         Datos personales
       </Heading>
       <Flex>
-        <FormControl mr="5%" isRequired isInvalid={!values.txtNombre}>
-          <FormLabel htmlFor="first-name" fontWeight={'normal'}>
+        <FormControl mr="5%" isRequired >
+          <FormLabel htmlFor="first-name" fontWeight={'normal'} >
             Nombre
           </FormLabel>
-          <Input id="first-name" placeholder="Ingrese su nombre"
-          errorBorderColor='red.100'
-          borderColor='green.300'
-          name='txtNombre' value={values.txtNombre} onChange={handleChange} required />
+          <Input id="first-name" placeholder="Ingrese su nombre" 
+          name='txtNombre' value={ClienteEncontrado.nombre? ClienteEncontrado.nombre.split(" ")[0]:values.txtNombre} onChange={handleChange} required isDisabled={ClienteEncontrado.nombre}/>
         </FormControl>
 
-        <FormControl isRequired isInvalid={!values.txtApellido}>
+        <FormControl isRequired >
           <FormLabel htmlFor="last-name" fontWeight={'normal'}>
             Apellido
           </FormLabel>
           <Input id="last-name" placeholder="Ingrese su apellido"
-           errorBorderColor='red.100'
-           borderColor='green.300'
-          name='txtApellido' value={values.txtApellido} onChange={handleChange} required />
+          name='txtApellido' value={ClienteEncontrado.nombre? ClienteEncontrado.nombre.split(" ")[1]:values.txtApellido} 
+          onChange={handleChange} required isDisabled={ClienteEncontrado.nombre} />
         </FormControl>
       </Flex>
       <Flex mt={2}>
-        <FormControl mr="5%" isRequired isInvalid={!values.txtDni}>
+        <FormControl mr="5%" isRequired >
           <FormLabel htmlFor="dni" fontWeight={'normal'}>
             DNI
           </FormLabel>
-          <Input id="dni" placeholder="37650111"
-          errorBorderColor='red.100'
-          borderColor='green.300'
+          <Input id="dni" placeholder="Ingrese su DNI"
           type='tel'
           maxLength='8'
-          name='txtDni' value={values.txtDni} onChange={handleChange} required />
+          name='txtDni' value={ClienteEncontrado? ClienteEncontrado.dni:values.txtDni} 
+          onChange={handleChange} required isDisabled={ClienteEncontrado.dni} />
         </FormControl>
 
-        <FormControl isRequired isInvalid={!values.txtTelefono}>
+        <FormControl isRequired >
           <FormLabel htmlFor="telefono" fontWeight={'normal'}>
             Telefono
           </FormLabel>
           <Input id="telefono" placeholder="1155662244"
-           errorBorderColor='red.100'
-           borderColor='green.300'
            type='tel'
-           maxlength='11'
-          name='txtTelefono' value={values.txtTelefono} onChange={handleChange} required />
+           maxLength='11'
+          name='txtTelefono' value={ClienteEncontrado? ClienteEncontrado.telefono:values.txtTelefono} 
+          onChange={handleChange} required isDisabled={ClienteEncontrado.telefono}/>
         </FormControl>
       </Flex>
-      <FormControl mt="2%" isRequired isInvalid={!values.txtEmail}>
+      <FormControl mt="2%" isRequired >
         <FormLabel htmlFor="email" fontWeight={'normal'}>
           Email
         </FormLabel>
-        <Input id="email" type="email" 
-        errorBorderColor='red.100'
-        borderColor='green.300'
-        placeholder="ejemplo@gmail.com"
-        name="txtEmail"
-        value={values.txtEmail} onChange={handleChange} required />
+        <InputGroup>
+
+          <Input id="email" type="email" 
+          placeholder="ejemplo@gmail.com"
+          name="txtEmail"
+          value={ClienteEncontrado? ClienteEncontrado.email:emailModal.toString()} onChange={handleChange} required isDisabled={true} />
+          <InputRightElement width='4.5rem'>
+          <Button h='1.75rem' size='sm' onClick={()=>{window.location.reload();}}>
+            <CiUndo/>
+          </Button>
+        </InputRightElement>
+        </InputGroup>
       </FormControl>
+
+      {ClienteEncontrado&&!ClienteEncontrado.status&&
+      <VStack justifyContent='center' mt={2}>
+        
+        <Text>¿Necesitas utilizar otros datos?</Text>
+        <Button onClick={()=>{window.location.reload();}}>Utilizar otro email</Button>
+      </VStack>
+      }
 
     </>
   );
 };
 
-const Form2 = ({handleChange,values}) => {
+const Form2 = ({handleChange,values,ClienteEncontrado}) => {
   return (
     <>
       <Heading w="100%" textAlign={'center'} fontWeight="normal" mb="2%">
@@ -152,7 +178,7 @@ const Form2 = ({handleChange,values}) => {
         </Select>
       </FormControl>
 
-      <FormControl  mb={3} as={GridItem} colSpan={[6, 6, null, 2]} isRequired isInvalid={!values.txtCiudad}>
+      <FormControl  mb={3} as={GridItem} colSpan={[6, 6, null, 2]} isRequired >
         <FormLabel
           htmlFor="city"
           fontSize="sm"
@@ -173,12 +199,11 @@ const Form2 = ({handleChange,values}) => {
           size="sm"
           w="full"
           rounded="md"
-          value={values.txtCiudad}
+          value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.provincia:values.txtCiudad}
           name="txtCiudad"
           onChange={handleChange}
           required
-          errorBorderColor='red.100'
-          borderColor='green.300'
+          isDisabled={ClienteEncontrado}
           >
           <option value="Buenos Aires">Buenos Aires</option>
           <option value="Ciudad Autonoma de Buenos Aires">Ciudad Autonoma de Buenos Aires</option>
@@ -187,60 +212,60 @@ const Form2 = ({handleChange,values}) => {
 
       <Text size='md' as='b'>Dirección</Text>
       <Flex mt={1}>
-        <FormControl mr="5%" isRequired isInvalid={!values.txtCalle}>
+        <FormControl mr="5%" isRequired >
           <FormLabel htmlFor="calle" fontWeight={'normal'}>
             Calle
           </FormLabel>
-          <Input id="calle" placeholder="Av Mitre"
-          errorBorderColor='red.100'
-          borderColor='green.300'
+          <Input id="calle" placeholder="Ingrese la calle"
           type='text'
           maxLength='35'
-          name='txtCalle' value={values.txtCalle} onChange={handleChange} required />
+          name='txtCalle' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.calle:values.txtCalle} 
+          onChange={handleChange} required 
+          isDisabled={ClienteEncontrado}/>
         </FormControl>
 
-        <FormControl isRequired isInvalid={!values.txtAltura}>
+        <FormControl isRequired >
           <FormLabel htmlFor="altura" fontWeight={'normal'}>
             Altura
           </FormLabel>
-          <Input id="altura" placeholder="1256"
-           errorBorderColor='red.100'
-           borderColor='green.300'
+          <Input id="altura" placeholder="ingrese la altura"
            type='number'
            max='20000'
            min='0'
-          name='txtAltura' value={values.txtAltura} onChange={handleChange} required />
+          name='txtAltura' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.altura:values.txtAltura} 
+          onChange={handleChange} required 
+          isDisabled={ClienteEncontrado}/>
         </FormControl>
       </Flex>
       <Flex mt={1}>
-        <FormControl mr="5%" isRequired isInvalid={!values.txtPiso}>
+        <FormControl mr="5%" isRequired >
           <FormLabel htmlFor="piso" fontWeight={'normal'}>
             Piso
           </FormLabel>
-          <Input id="piso" placeholder="6"
-          errorBorderColor='red.100'
-          borderColor='green.300'
+          <Input id="piso" placeholder="Ingrese el piso"
           type='number'
           max='56'
           min='0'
-          name='txtPiso' value={values.txtPiso} onChange={handleChange} required />
+          name='txtPiso' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.piso:values.txtPiso} 
+          onChange={handleChange} required 
+          isDisabled={ClienteEncontrado}/>
         </FormControl>
 
-        <FormControl isRequired isInvalid={!values.txtDepartamento}>
+        <FormControl isRequired>
           <FormLabel htmlFor="departamento" fontWeight={'normal'}>
             Departamento
           </FormLabel>
-          <Input id="departamento" placeholder="B"
-           errorBorderColor='red.100'
-           borderColor='green.300'
+          <Input id="departamento" placeholder="Ingrese el Departamento / timbre"
            type='text'
-           maxlength='3'
-          name='txtDepartamento' value={values.txtDepartamento} onChange={handleChange} required />
+           maxLength='3'
+          name='txtDepartamento' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.departamento:values.txtDepartamento} 
+          onChange={handleChange} required 
+          isDisabled={ClienteEncontrado}/>
         </FormControl>
       </Flex>
 
 
-      <FormControl as={GridItem} colSpan={[6, 3, null, 2]} isRequired isInvalid={!values.txtCod_postal}>
+      <FormControl as={GridItem} colSpan={[6, 3, null, 2]} isRequired >
         <FormLabel
           htmlFor="postal_code"
           fontSize="sm"
@@ -253,7 +278,7 @@ const Form2 = ({handleChange,values}) => {
           Codigo Postal
         </FormLabel>
         <Input
-          maxlength="5"
+          maxLength="5"
           type= "number"
           name="txtCod_postal"
           id="postal_code"
@@ -263,14 +288,24 @@ const Form2 = ({handleChange,values}) => {
           size="sm"
           w="full"
           rounded="md"     
-          placeholder="1166"
-          value={values.txtCod_postal}
+          placeholder="Ingrese su código postal"
+          value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.codigo_postal:values.txtCod_postal}
           onChange={handleChange}
           required
-          errorBorderColor='red.100'
-          borderColor='green.300'
+          isDisabled={ClienteEncontrado}
         />
       </FormControl>
+      <FormControl mt={2} isRequired>
+          <FormLabel htmlFor="aclaraciones" fontWeight={'normal'}>
+            Aclaraciones
+          </FormLabel>
+          <Textarea id="aclaraciones" placeholder="Ingrese las aclaraciones"
+           type='text'
+           maxLength='150'
+          name='txtAclaraciones' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.aclaraciones:values.txtAclaraciones} 
+          onChange={handleChange} required 
+          isDisabled={ClienteEncontrado}/>
+        </FormControl>
     </>
   );
 };
@@ -304,7 +339,7 @@ const Form3 = ({handleChange,values}) => {
             </InputLeftAddon>
             <Input
               type="text"
-              placeholder="Lorena Jerez"
+              placeholder="Ingrese el nombre del titular"
               focusBorderColor="brand.400"
               rounded="md"
               required
@@ -336,7 +371,7 @@ const Form3 = ({handleChange,values}) => {
               <FcUnlock/>
             </InputLeftAddon>
             <Input
-              type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="16"
+              type="tel" inputMode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="16"
               placeholder="XXXX XXXX XXXX XXXX"
               focusBorderColor="brand.400"
               rounded="md"
@@ -357,7 +392,7 @@ const Form3 = ({handleChange,values}) => {
                 MM/YY
             </FormLabel>
             <Input id="vencimiento" placeholder="XX/XX"
-              maxlength="5"
+              maxLength="5"
               name="txtVencimiento"
               value={values.txtVencimiento}
               onChange={handleChange}
@@ -369,7 +404,7 @@ const Form3 = ({handleChange,values}) => {
                 CVV
             </FormLabel>
             <Input id="codigoSeguridad" placeholder="XXX"
-              maxlength="4" 
+              maxLength="4" 
               name="txtCod_Seguridad"
               value={values.txtCod_Seguridad}
               onChange={handleChange}
@@ -412,9 +447,71 @@ export default function CheckoutForm({completarCompra,productosCarrito}) {
     await sendFormData(values)
   }
 
+  const fetcher = async (url) => {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          accept: 'text/plain',
+          'x-app-token': 'prueba123',
+        },
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+      throw new Error('Error al obtener los datos');
+    }
+  };
+
+  const [emailModal, setEmailModal]= useState("")
+
+  //const encodedEmailModal = encodeURIComponent(emailModal);
+  
+  const { data: resultado, error } = useSWR(
+    emailModal ? `https://hor5.bsite.net/api/clientes/validar/${emailModal}` : null,
+    fetcher
+  );
+  
+  //console.log("resultado: ", resultado);
+  
+  let ClienteEncontrado = false;
+  if (error) {
+    // Manejar el error de solicitud, por ejemplo, código de respuesta 404
+    if (error.response && error.response.status === 404) {
+      ClienteEncontrado = false;
+    } else {
+      // Manejar otros errores de red o del servidor
+      // Puedes mostrar un mensaje de error, registrar el error, etc.
+      console.error('Error al obtener los datos:', error);
+    }
+  } else {
+    // Si no hay error, asignar el resultado como ClienteEncontrado
+    ClienteEncontrado = resultado ? resultado : false;
+  }
+  //console.log("ClienteEncontrado: ",ClienteEncontrado)
+useEffect(()=>{
+  if(ClienteEncontrado&&!ClienteEncontrado.status&&!resultado.status){
+    toast({
+      title: 'Datos recuperados.',
+      description: `Se recuperaron exitosamente los datos asociados al email ${emailModal}`,
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+  }
+},[ClienteEncontrado])
+  
+
+  
+
+
+
+
+//console.log(emailModal)
 
   return (
     <>
+      <ModalEmail setEmailModal={setEmailModal} />
       <Box
         borderWidth="1px"
         rounded="lg"
@@ -430,8 +527,8 @@ export default function CheckoutForm({completarCompra,productosCarrito}) {
           mb="5%"
           mx="5%"
           isAnimated></Progress>
-        {step === 1 ? <Form1 handleChange={handleChange} values={values}/> : step === 2 ? 
-          <Form2 handleChange={handleChange} values={values}/> : 
+        {step === 1 ? <Form1 ClienteEncontrado={ClienteEncontrado} handleChange={handleChange} values={values} emailModal={emailModal}/> : step === 2 ? 
+          <Form2 ClienteEncontrado={ClienteEncontrado} handleChange={handleChange} values={values}/> : 
           <Form3 handleChange={handleChange} values={values}/>}
         <ButtonGroup mt="5%" w="100%">
           <Flex w="100%" justifyContent="space-between">
@@ -505,6 +602,37 @@ export default function CheckoutForm({completarCompra,productosCarrito}) {
           </Flex>
         </ButtonGroup>
       </Box>
+    </>
+  );
+}
+
+function ModalEmail({setEmailModal}) {
+  const { register, handleSubmit } = useForm();
+  const [isOpen, setIsOpen] = useState(true);
+
+  const onSubmit = (data) => {
+    // Aquí puedes manejar los datos del formulario, por ejemplo, enviarlos a través de una solicitud API
+    
+    setEmailModal(data.email)
+    setIsOpen(false); // Cerrar el modal al enviar el formulario
+  };
+
+  return (
+    <>
+      <Modal closeOnOverlayClick={false} isCentered isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px) hue-rotate(90deg)' />
+        <ModalContent>
+          <ModalHeader>Ingresá tu email</ModalHeader>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalBody>
+              <Input id="emailModal" placeholder='Ingresá tu email' type="email" required {...register('email')} />
+            </ModalBody>
+            <ModalFooter>
+              <Button type="submit">Confirmar</Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

@@ -182,7 +182,7 @@ import {
           } catch (error) {
             toast({
                 title: 'Algo salió mal.',
-                description: "No se pudo crear el producto, vuelve a intentar más tarde.",
+                description: "No se pudo eliminar el producto, vuelve a intentar más tarde.",
                 status: 'error',
                 duration: 3000,
                 isClosable: true,

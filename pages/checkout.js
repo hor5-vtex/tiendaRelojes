@@ -3,7 +3,7 @@ import { Flex, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import ListaProductosCheckout from "@/components/ListaProductosCheckout";
 import { useRouter } from "next/router";
-import { actualizarStock } from "./api/lib/actualizarStock";
+import Link from "next/link";
 
 export default function Checkout({productosCarrito,total,vaciarCarrito}){
     
@@ -12,14 +12,6 @@ export default function Checkout({productosCarrito,total,vaciarCarrito}){
     //El total viene en la ultima posición del array, para evitar errores se borra al volver.
     const deleteTotal = ()=>{
         productosCarrito.pop()
-    }
-    const descontarDeStock = (productosCarrito)=>{
-        productosCarrito.forEach(producto => {
-            producto.stock -= producto.cantidad
-            //delete producto.cantidad
-            //endpoint put            
-        });
-        //actualizarStock(productosCarrito)
     }
     const completarCompra = (router)=>{
         deleteTotal()
@@ -30,18 +22,6 @@ export default function Checkout({productosCarrito,total,vaciarCarrito}){
 
     return(
         <>
-            <IconButton variant='outline'
-            colorScheme='blackAlpha'
-            aria-label='Volver'
-            fontSize='30px'
-            rounded='full'
-            m={2}
-            icon={<ChevronLeftIcon />}
-            onClick={() => { 
-                    router.push('/')
-                  }
-                }
-            />
 
             <Flex>
                 <CheckoutForm completarCompra={completarCompra} productosCarrito={productosCarrito}/>

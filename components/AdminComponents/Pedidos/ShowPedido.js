@@ -16,6 +16,7 @@ import { chakra,Box,SimpleGrid,Stat,StatLabel,Flex,StatNumber,useColorModeValue,
 
 export default function ShowPedido({pedido}){
 
+
     return(
     <>
             <Box maxW="7xl" mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
@@ -56,6 +57,14 @@ export default function ShowPedido({pedido}){
 
 function StatsCard(props) {
     const { data,type, title, stat, icon } = props;
+
+    function parsearFecha(fecha){
+      const aFecha = fecha.split("-")
+      aFecha[2] = aFecha[2].split("T")
+      const fechaNueva=`${aFecha[2][0]}/${aFecha[1]}/${aFecha[0]}`
+      return fechaNueva
+    }
+
     return (
       <Stat
         px={{ base: 2, md: 4 }}
@@ -129,7 +138,7 @@ function StatsCard(props) {
           <PopoverHeader>Detalles del pedido</PopoverHeader>
           <PopoverBody>
             <Text as='b'>Fecha del pedido</Text>
-            <Text>{data.fecha_de_creacion}</Text>
+            <Text>{parsearFecha(data.fecha_de_creacion)}</Text>
             <Badge variant='solid' colorScheme={data.completado?'green':'yellow'}>
                 {data.completado?'Completado':'En proceso'}
             </Badge><br/>

@@ -6,6 +6,7 @@ import { getSession, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export default function ProductoPage({productos}){
+  
   useEffect(()=>{},productos)
   const {data: session, status }= useSession();
   
@@ -16,7 +17,7 @@ export default function ProductoPage({productos}){
             <Heading>Productos</Heading>
           </Center>
           <Flex justifyContent='end'>
-            <DrawerProducto/>
+            <DrawerProducto />
           </Flex>
           
 
