@@ -38,6 +38,7 @@ import { sendFormData } from '@/pages/api/lib/api';
 import { useForm } from 'react-hook-form';
 import { CiUndo } from 'react-icons/ci';
 import useSWR from 'swr';
+import Link from 'next/link';
 
 
 const initValues ={
@@ -65,7 +66,7 @@ const initState = {
 
 
 
-const Form1 = ({handleChange,values,ClienteEncontrado,emailModal}) => {
+const Form1 = ({handleChange,values,ClienteEncontrado,emailModal,setIsOpen}) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
@@ -127,9 +128,11 @@ const Form1 = ({handleChange,values,ClienteEncontrado,emailModal}) => {
           name="txtEmail"
           value={ClienteEncontrado? ClienteEncontrado.email:emailModal.toString()} onChange={handleChange} required isDisabled={true} />
           <InputRightElement width='4.5rem'>
-          <Button h='1.75rem' size='sm' onClick={()=>{window.location.reload();}}>
-            <CiUndo/>
-          </Button>
+
+            <Button h='1.75rem' size='sm' onClick={()=>{setIsOpen(true);}}>
+              <CiUndo/>
+            </Button>
+
         </InputRightElement>
         </InputGroup>
       </FormControl>
@@ -138,7 +141,7 @@ const Form1 = ({handleChange,values,ClienteEncontrado,emailModal}) => {
       <VStack justifyContent='center' mt={2}>
         
         <Text>¿Necesitas utilizar otros datos?</Text>
-        <Button onClick={()=>{window.location.reload();}}>Utilizar otro email</Button>
+        <Button onClick={()=>{setIsOpen(true);}}>Utilizar otro email</Button>
       </VStack>
       }
 
@@ -425,6 +428,8 @@ export default function CheckoutForm({completarCompra,productosCarrito}) {
 
   const [formData, setFormData] = useState(initState);
   const {values, isLoading} = formData
+  //para abrir o cerrar el modal
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleChange= ({target})=>{
     setFormData(prev=>({
@@ -511,7 +516,7 @@ useEffect(()=>{
 
   return (
     <>
-      <ModalEmail setEmailModal={setEmailModal} />
+      <ModalEmail isOpen={isOpen} setIsOpen={setIsOpen} setEmailModal={setEmailModal} />
       <Box
         borderWidth="1px"
         rounded="lg"
@@ -527,7 +532,7 @@ useEffect(()=>{
           mb="5%"
           mx="5%"
           isAnimated></Progress>
-        {step === 1 ? <Form1 ClienteEncontrado={ClienteEncontrado} handleChange={handleChange} values={values} emailModal={emailModal}/> : step === 2 ? 
+        {step === 1 ? <Form1 setIsOpen={setIsOpen} ClienteEncontrado={ClienteEncontrado} handleChange={handleChange} values={values} emailModal={emailModal}/> : step === 2 ? 
           <Form2 ClienteEncontrado={ClienteEncontrado} handleChange={handleChange} values={values}/> : 
           <Form3 handleChange={handleChange} values={values}/>}
         <ButtonGroup mt="5%" w="100%">
@@ -606,9 +611,9 @@ useEffect(()=>{
   );
 }
 
-function ModalEmail({setEmailModal}) {
+function ModalEmail({setEmailModal, isOpen,setIsOpen}) {
   const { register, handleSubmit } = useForm();
-  const [isOpen, setIsOpen] = useState(true);
+
 
   const onSubmit = (data) => {
     // Aquí puedes manejar los datos del formulario, por ejemplo, enviarlos a través de una solicitud API

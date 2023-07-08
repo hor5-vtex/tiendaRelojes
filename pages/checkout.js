@@ -1,5 +1,5 @@
 import CheckoutForm from "@/components/CheckoutForm";
-import { Flex, IconButton } from "@chakra-ui/react";
+import { SimpleGrid, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import ListaProductosCheckout from "@/components/ListaProductosCheckout";
 import { useRouter } from "next/router";
@@ -23,10 +23,10 @@ export default function Checkout({productosCarrito,total,vaciarCarrito}){
     return(
         <>
 
-            <Flex>
+            <SimpleGrid columns={[1, null, 2]} spacing='40px'>
                 <CheckoutForm completarCompra={completarCompra} productosCarrito={productosCarrito}/>
                 <ListaProductosCheckout productosCarrito={productosCarrito} />
-            </Flex>
+            </SimpleGrid>
 
 
         </>
