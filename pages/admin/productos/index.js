@@ -3,11 +3,13 @@ import CardProductoAdmin from "@/components/AdminComponents/Productos/CardProduc
 import DrawerProducto from "@/components/AdminComponents/Productos/DrawerProducto";
 import { Text, Heading, Center, VStack, SimpleGrid,Box, Flex } from "@chakra-ui/react";
 import { getSession, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 
 export default function ProductoPage({productos}){
   
-  useEffect(()=>{},productos)
+  const [productosState, setProductosState]= useState(productos)
+
+  useEffect(()=>{},productosState)
   const {data: session, status }= useSession();
   
     return(
@@ -17,14 +19,14 @@ export default function ProductoPage({productos}){
             <Heading>Productos</Heading>
           </Center>
           <Flex justifyContent='end'>
-            <DrawerProducto />
+            <DrawerProducto setProductosState={setProductosState} productosState={productosState}/>
           </Flex>
           
 
               {
-                productos? 
+                productosState? 
                 <SimpleGrid columns={[1, null, 3]} spacing='40px' mb={100} mt={20}>
-                {productos.map((producto, index) => (
+                {productosState.map((producto, index) => (
                   <CardProductoAdmin key={index} producto={producto}/>
                 ))}
               </SimpleGrid>

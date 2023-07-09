@@ -1,4 +1,4 @@
-import { Button,Drawer,DrawerOverlay,DrawerHeader,DrawerBody,DrawerContent, useDisclosure,Input,Text,DrawerFooter } from "@chakra-ui/react"
+import { Button,Drawer,DrawerOverlay,DrawerHeader,DrawerBody,DrawerContent, useDisclosure,Input,Text,DrawerFooter,ModalCloseButton } from "@chakra-ui/react"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -13,19 +13,18 @@ export default function DrawerMarca(){
                 +
             </Button>
 
-      <Drawer placement='bottom'onClose={onClose} isOpen={isOpen}>
+      <Drawer placement='right' size="md" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth='1px'>Crear Marca</DrawerHeader>
+          <ModalCloseButton />
           <DrawerBody>
           <form onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}>
             
-            <Input {...register("nombre")} placeholder="nombre de la marca" />
+            <Input {...register("nombre")} placeholder="nombre de la marca" required />
 
-            <Text>{data}</Text>
-            <DrawerFooter>
-
-                <Button colorScheme="blue" type="submit" rounded='xl' m={10}> Crear</Button>
+            <DrawerFooter justifyContent='center'>
+                <Button colorScheme="blue" type="submit" rounded='xl' m={10}> Confirmar</Button>
             </DrawerFooter>
             </form>
           </DrawerBody>

@@ -100,7 +100,7 @@ export default function PaginaProducto({producto,variaciones,precioDolar,agregar
               <Text fontSize="lg">{`Marca: ${producto.nombreMarca}`}</Text>
               <Text fontSize="lg">{`Tipo: ${producto.nombreSubcategoria}`}</Text>
               <Text fontSize="lg">{`Cod Referencia: ${producto.cod_referencia}`}</Text>
-              <Text fontSize="lg">{`Disponibilidad: ${producto.stock}`}</Text>
+              <Text fontSize="lg">Disponibilidad: {producto.stock>=1?producto.stock:<Badge rounded='full'>Sin stock</Badge>}</Text>
               <Text fontSize='xl' fontWeight='bold'>
                 Especificaciones
               </Text>
@@ -133,7 +133,7 @@ export default function PaginaProducto({producto,variaciones,precioDolar,agregar
         </HStack>
         
         <Center>
-            <Button colorScheme="blue" mb={20} onClick={()=>{agregarCarrito(producto)}}>Agregar al carrito</Button>
+            <Button isDisabled={producto.stock<=0} colorScheme="blue" mb={20} onClick={()=>{agregarCarrito(producto)}}>Agregar al carrito</Button>
         </Center>
 
       </Box>

@@ -1,6 +1,7 @@
 import Sidebar from "@/components/AdminComponents/AdminSidebar";
+import DrawerSku from "@/components/AdminComponents/Skus/DrawerSkus";
 import SkuCard from "@/components/AdminComponents/Skus/SkuCard";
-import { Center,Heading,Text,SimpleGrid,Box } from "@chakra-ui/react";
+import { Center,Heading,Text,SimpleGrid,Box,Flex } from "@chakra-ui/react";
 import { useSession, getSession } from "next-auth/react";
 
 export default function SkusPage({skus}){
@@ -14,6 +15,9 @@ export default function SkusPage({skus}){
             <Center>
                 <Heading>Stock Keeping Units (SKUs) </Heading>
             </Center>
+            <Flex justifyContent='end'>
+              <DrawerSku />
+            </Flex>
             {skus?
             <SimpleGrid columns={[1, null, 3]} spacing='40px' mb={100}>
                 {skus.map((sku, index) => (

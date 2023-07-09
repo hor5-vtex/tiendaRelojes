@@ -38,7 +38,6 @@ import { sendFormData } from '@/pages/api/lib/api';
 import { useForm } from 'react-hook-form';
 import { CiUndo } from 'react-icons/ci';
 import useSWR from 'swr';
-import Link from 'next/link';
 
 
 const initValues ={
@@ -65,11 +64,13 @@ const initState = {
 
 
 
-
 const Form1 = ({handleChange,values,ClienteEncontrado,emailModal,setIsOpen}) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
+  useEffect(()=>{
+    handleChange
+  },[values])
 
   return (
     <>
@@ -110,7 +111,7 @@ const Form1 = ({handleChange,values,ClienteEncontrado,emailModal,setIsOpen}) => 
           <FormLabel htmlFor="telefono" fontWeight={'normal'}>
             Telefono
           </FormLabel>
-          <Input id="telefono" placeholder="1155662244"
+          <Input id="telefono" placeholder="Ingrese su telefono"
            type='tel'
            maxLength='11'
           name='txtTelefono' value={ClienteEncontrado? ClienteEncontrado.telefono:values.txtTelefono} 
@@ -150,6 +151,9 @@ const Form1 = ({handleChange,values,ClienteEncontrado,emailModal,setIsOpen}) => 
 };
 
 const Form2 = ({handleChange,values,ClienteEncontrado}) => {
+  useEffect(()=>{
+    handleChange
+  },[values])
   return (
     <>
       <Heading w="100%" textAlign={'center'} fontWeight="normal" mb="2%">
@@ -206,7 +210,7 @@ const Form2 = ({handleChange,values,ClienteEncontrado}) => {
           name="txtCiudad"
           onChange={handleChange}
           required
-          isDisabled={ClienteEncontrado}
+          isDisabled={ClienteEncontrado&&!ClienteEncontrado.status}
           >
           <option value="Buenos Aires">Buenos Aires</option>
           <option value="Ciudad Autonoma de Buenos Aires">Ciudad Autonoma de Buenos Aires</option>
@@ -224,7 +228,7 @@ const Form2 = ({handleChange,values,ClienteEncontrado}) => {
           maxLength='35'
           name='txtCalle' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.calle:values.txtCalle} 
           onChange={handleChange} required 
-          isDisabled={ClienteEncontrado}/>
+          isDisabled={ClienteEncontrado&&!ClienteEncontrado.status}/>
         </FormControl>
 
         <FormControl isRequired >
@@ -237,7 +241,7 @@ const Form2 = ({handleChange,values,ClienteEncontrado}) => {
            min='0'
           name='txtAltura' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.altura:values.txtAltura} 
           onChange={handleChange} required 
-          isDisabled={ClienteEncontrado}/>
+          isDisabled={ClienteEncontrado&&!ClienteEncontrado.status}/>
         </FormControl>
       </Flex>
       <Flex mt={1}>
@@ -251,7 +255,7 @@ const Form2 = ({handleChange,values,ClienteEncontrado}) => {
           min='0'
           name='txtPiso' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.piso:values.txtPiso} 
           onChange={handleChange} required 
-          isDisabled={ClienteEncontrado}/>
+          isDisabled={ClienteEncontrado&&!ClienteEncontrado.status}/>
         </FormControl>
 
         <FormControl isRequired>
@@ -263,7 +267,7 @@ const Form2 = ({handleChange,values,ClienteEncontrado}) => {
            maxLength='3'
           name='txtDepartamento' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.departamento:values.txtDepartamento} 
           onChange={handleChange} required 
-          isDisabled={ClienteEncontrado}/>
+          isDisabled={ClienteEncontrado&&!ClienteEncontrado.status}/>
         </FormControl>
       </Flex>
 
@@ -295,7 +299,7 @@ const Form2 = ({handleChange,values,ClienteEncontrado}) => {
           value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.codigo_postal:values.txtCod_postal}
           onChange={handleChange}
           required
-          isDisabled={ClienteEncontrado}
+          isDisabled={ClienteEncontrado&&!ClienteEncontrado.status}
         />
       </FormControl>
       <FormControl mt={2} isRequired>
@@ -307,13 +311,16 @@ const Form2 = ({handleChange,values,ClienteEncontrado}) => {
            maxLength='150'
           name='txtAclaraciones' value={ClienteEncontrado.direccion? ClienteEncontrado.direccion.aclaraciones:values.txtAclaraciones} 
           onChange={handleChange} required 
-          isDisabled={ClienteEncontrado}/>
+          isDisabled={ClienteEncontrado&&!ClienteEncontrado.status}/>
         </FormControl>
     </>
   );
 };
 
 const Form3 = ({handleChange,values}) => {
+  useEffect(()=>{
+    handleChange
+  },[values])
   return (
     <>
       <Heading w="100%" textAlign={'center'} fontWeight="normal">
@@ -374,7 +381,7 @@ const Form3 = ({handleChange,values}) => {
               <FcUnlock/>
             </InputLeftAddon>
             <Input
-              type="tel" inputMode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="16"
+              type="tel" inputMode="numeric" pattern="[0-9\s]{13,19}" autoComplete="cc-number" maxLength="16"
               placeholder="XXXX XXXX XXXX XXXX"
               focusBorderColor="brand.400"
               rounded="md"
@@ -440,6 +447,7 @@ export default function CheckoutForm({completarCompra,productosCarrito}) {
       }
     })
     )
+    console.log("HANDLE CHANGE: ",values)
   }
 
   const onSubmit = async ()=>{
@@ -503,6 +511,26 @@ useEffect(()=>{
       duration: 3000,
       isClosable: true,
     })
+
+    values.txtNombre= ClienteEncontrado.nombre.split(" ")[0]
+    values.txtApellido = ClienteEncontrado.nombre.split(" ")[1]
+    values.txtDni = ClienteEncontrado.dni
+    values.txtTelefono = ClienteEncontrado.telefono
+    values.txtEmail = ClienteEncontrado.email
+
+    values.txtCiudad = ClienteEncontrado.direccion.provincia
+    values.txtCalle = ClienteEncontrado.direccion.calle
+    values.txtAltura = ClienteEncontrado.direccion.altura
+    values.txtPiso = ClienteEncontrado.direccion.piso
+    values.txtDepartamento = ClienteEncontrado.direccion.departamento
+    values.txtCod_postal = ClienteEncontrado.direccion.codigo_postal
+    values.txtAclaraciones = ClienteEncontrado.direccion.aclaraciones
+
+    console.log("VALORES:",values)
+
+  }else{
+    values.txtEmail=emailModal
+    console.log("VALORES:",values)
   }
 },[ClienteEncontrado])
   

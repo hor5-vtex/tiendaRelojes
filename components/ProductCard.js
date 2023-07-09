@@ -7,7 +7,8 @@ import {
     Stack,
     Image,
     Button,
-    Flex
+    Flex,
+    Badge
   } from "@chakra-ui/react";
   import Link from "next/link"
 
@@ -82,9 +83,16 @@ import {
               </Link>
 
               <Flex justifyContent='end'>
-                <Button colorScheme='teal' onClick={()=>{agregarCarrito(Sku)}} rounded='full'>
-                    <BsCartPlus/>
-                </Button>
+                {Sku.stock>=1?
+                  <Button colorScheme='teal' onClick={()=>{agregarCarrito(Sku)}} rounded='full'>
+                      <BsCartPlus/>
+                  </Button>
+                  :
+                  <Badge p={3} rounded='full'>
+                    NO DISPONIBLE
+                  </Badge>
+                }
+
               </Flex>
             </Box>
           </Center>

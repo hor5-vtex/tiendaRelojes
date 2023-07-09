@@ -1,5 +1,5 @@
 import { Button,Drawer,DrawerOverlay,DrawerHeader,DrawerBody,DrawerContent, useDisclosure,Input,
-        Text,DrawerFooter, Textarea, Select, useToast } from "@chakra-ui/react"
+        Text,DrawerFooter, Textarea, Select, useToast,ModalCloseButton } from "@chakra-ui/react"
 import { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useSWR, { mutate } from 'swr';
@@ -110,25 +110,26 @@ export default function DrawerProducto(){
                 +
             </Button>
 
-      <Drawer placement='bottom'onClose={onClose} isOpen={isOpen}>
+      <Drawer placement='right'onClose={onClose} isOpen={isOpen} size='md'>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth='1px'>Crear Producto</DrawerHeader>
-          <DrawerBody p={100}>
+          <ModalCloseButton />
+          <DrawerBody >
           <form onSubmit={handleSubmit(onSubmit)}>
             
-            <Input m={3}{...register("nombre")} placeholder="Nombre del producto" />
+            <Input m={3}{...register("nombre", { required: true })} placeholder="Nombre del producto" required/>
 
-            <Textarea m={3} {...register("descripcion")} placeholder="Descripción" />
+            <Textarea m={3} {...register("descripcion", { required: true })} placeholder="Descripción" required/>
 
-            <Select m={3} {...register("fk_idMarca", { required: true })}>
+            <Select m={3} {...register("fk_idMarca", { required: true })} required>
             <option value="" >Selecciona la marca</option>
                 {marcas&&marcas.map(marca=>
                     <option key={marca.idMarca}  value={marca.idMarca}>{marca.nombre}</option>
                     )}
             </Select>
 
-            <Select m={3} {...register('fk_idCategoria', { required: true })} onChange={handleCategoriaChange}>
+            <Select m={3} {...register('fk_idCategoria', { required: true })} onChange={handleCategoriaChange} required>
         <option value="">Selecciona la categoría</option>
         {categorias &&
           categorias.map((categoria) => (
@@ -138,7 +139,7 @@ export default function DrawerProducto(){
           ))}
       </Select>
 
-      <Select m={3} {...register('fk_idSubcategoria', { required: true })}>
+      <Select m={3} {...register('fk_idSubcategoria', { required: true })} required>
         <option value="">Selecciona la subcategoría</option>
         {subcategorias &&
           subcategorias.map((subcategoria) => (
@@ -149,9 +150,9 @@ export default function DrawerProducto(){
       </Select>
 
             <Text>{data}</Text>
-            <DrawerFooter>
+            <DrawerFooter justifyContent='center'>
 
-                <Button colorScheme="blue" type="submit" rounded='xl' m={10}> Crear</Button>
+                <Button colorScheme="blue" type="submit" rounded='xl' m={10}> Confirmar</Button>
             </DrawerFooter>
             </form>
           </DrawerBody>

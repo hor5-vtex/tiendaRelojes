@@ -27,9 +27,12 @@ export default function Marca({Skus,marca,productosCarrito,status,agregarCarrito
 
         <SimpleGrid columns={[1, null, 3]} spacing='40px' mb={100}>
             {Skus.map((sku, index) => (
-              <Box key={index}>
-                <ProductCard Sku={sku} agregarCarrito={agregarCarrito}/>
-              </Box>
+             
+                <Box key={index}>
+                  <ProductCard Sku={sku} agregarCarrito={agregarCarrito}/>
+                </Box>
+              
+
             ))}
           </SimpleGrid>
             </>
