@@ -37,7 +37,7 @@ import { useRouter } from 'next/router';
 import { sendFormData } from '@/pages/api/lib/api';
 import { useForm } from 'react-hook-form';
 import { CiUndo } from 'react-icons/ci';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 
 const initValues ={
@@ -643,13 +643,32 @@ function ModalEmail({setEmailModal, isOpen,setIsOpen}) {
   const { register, handleSubmit } = useForm();
 
 
-  const onSubmit = (data) => {
-    // Aquí puedes manejar los datos del formulario, por ejemplo, enviarlos a través de una solicitud API
-    
-    setEmailModal(data.email)
+  const onSubmit = async (data) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-app-token': process.env.API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    };
+  
+    try {
+      const response = await fetch('https://hor5.bsite.net/api/pedidos/create', options);
+      const responseData = await response.json();
+  
+      // Actualizar los datos en la caché de SWR
+      mutate('https://hor5.bsite.net/api/pedidos/create', responseData);
+  
+      console.log(responseData);
+    } catch (error) {
+      console.log('Algo salió mal:', error.message);
+    }
+  
+    setEmailModal(data.email);
     setIsOpen(false); // Cerrar el modal al enviar el formulario
-  };
-
+  }
+  
   return (
     <>
       <Modal closeOnOverlayClick={false} isCentered isOpen={isOpen} onClose={() => setIsOpen(false)}>

@@ -122,24 +122,6 @@ export default async function handler(req, res) {
         res.status(404).json({ error: `Connection refused at ${error.address}` });
       }
 
-      const options = {
-        method: 'POST',
-        headers: {
-          'x-app-token': 'prueba123',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      };
-      
-      
-      await fetch('https://hor5.bsite.net/api/pedidos/create', options)
-        .then(async response => {
-          console.log(await response.json())
-        })
-        .catch(async error => {
-          console.log("Algo salió mal>>")
-          console.log(await error.message)
-        });
 
 
     }
