@@ -123,15 +123,18 @@ export default function Carrito({productosCarrito, eliminarDeCarrito}){
                     </DrawerBody>
 
                     <DrawerFooter>
+                    {!(productosCarrito.length<1)&&
+                    <VStack>
+                        <Center>
+                            <Text fontSize='4xl'>Total: ${total.toLocaleString('en-US', { style: 'currency', currency: 'ARG', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+                        </Center>
 
-                        <VStack>
-                            <Center>
-                                <Text fontSize='4xl'>Total: ${total.toLocaleString('en-US', { style: 'currency', currency: 'ARG', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
-                            </Center>
-                            <Link href="/checkout">
-                                <Button colorScheme='blue' onClick={()=>{sendTotal(total)}}>Ir a pagar</Button>
-                            </Link>
-                        </VStack>
+                        <Link href="/checkout">
+                                <Button colorScheme='blue' onClick={()=>{sendTotal(total)}} >Ir a pagar</Button>
+                        </Link>
+                    </VStack>
+                    }
+
 
                     </DrawerFooter>
                 </DrawerContent>
