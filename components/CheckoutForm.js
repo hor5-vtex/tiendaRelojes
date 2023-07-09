@@ -447,7 +447,7 @@ export default function CheckoutForm({completarCompra,productosCarrito}) {
       }
     })
     )
-    console.log("HANDLE CHANGE: ",values)
+    //console.log("HANDLE CHANGE: ",values)
   }
 
   const onSubmit = async ()=>{
@@ -526,11 +526,11 @@ useEffect(()=>{
     values.txtCod_postal = ClienteEncontrado.direccion.codigo_postal
     values.txtAclaraciones = ClienteEncontrado.direccion.aclaraciones
 
-    console.log("VALORES:",values)
+    //console.log("VALORES:",values)
 
   }else{
     values.txtEmail=emailModal
-    console.log("VALORES:",values)
+    //console.log("VALORES:",values)
   }
 },[ClienteEncontrado])
   

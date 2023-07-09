@@ -125,7 +125,7 @@ export default async function handler(req, res) {
       const options = {
         method: 'POST',
         headers: {
-          'x-app-token': process.env.API_KEY,
+          'x-app-token': 'prueba123',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
