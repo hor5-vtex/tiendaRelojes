@@ -562,7 +562,7 @@ useEffect(()=>{
           <Form2 ClienteEncontrado={ClienteEncontrado} handleChange={handleChange} values={values}/> : 
           <Form3 handleChange={handleChange} values={values}/>}
         <ButtonGroup mt="5%" w="100%">
-          <Flex w="100%" justifyContent="space-between">
+        <SimpleGrid columns={[1, null, 2]} spacing={10}>
             <Flex>
               <Button
                 onClick={() => {
@@ -630,7 +630,7 @@ useEffect(()=>{
                 Confirmar compra
               </Button>
             ) : null}
-          </Flex>
+          </SimpleGrid>
         </ButtonGroup>
       </Box>
     </>
