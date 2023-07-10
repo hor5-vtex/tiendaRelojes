@@ -1,11 +1,66 @@
-import { Button,Drawer,DrawerOverlay,DrawerHeader,DrawerBody,DrawerContent, useDisclosure,Input,Text,DrawerFooter,ModalCloseButton } from "@chakra-ui/react"
+import { Button,Drawer,DrawerOverlay,DrawerHeader,DrawerBody,DrawerContent, 
+useDisclosure,Input,Text,DrawerFooter,ModalCloseButton,useToast } from "@chakra-ui/react"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function DrawerMarca(){
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit,reset } = useForm();
     const [data, setData] = useState("");
+    const toast = useToast();
+
+    const refreshPage = ()=>{
+      window.location.reload();
+   }
+
+    const fetcherPost = async (url, data) => {
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-app-token': 'prueba123',
+          },
+          body: JSON.stringify(data),
+        });
+        const responseData = await response.json();
+        return responseData;
+      } catch (error) {
+        console.error('Error al enviar los datos:', error);
+        throw new Error('Error al enviar los datos');
+      }
+    };
+
+    const onSubmit = async (data) => {
+      try {
+        const response = await fetcherPost('https://hor5.bsite.net/api/marcas/create', data);
+        onClose()
+        reset()
+
+          toast({
+            title: 'Se creó la marca',
+            description: "Marca creada exitosamente.",
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+          refreshPage();
+        
+        console.log('Respuesta del servidor:', response);
+        // Actualizar los datos utilizando mutate si es necesario
+        mutate('https://hor5.bsite.net/api/marcas/all');
+      } catch (error) {
+        toast({
+          title: 'Algo salió mal.',
+          description: "No se pudo crear la marca, vuelve a intentar más tarde.",
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        console.error('Error al enviar los datos:', error);
+      }
+    };
+
     return(
         <>
 
@@ -19,7 +74,7 @@ export default function DrawerMarca(){
           <DrawerHeader borderBottomWidth='1px'>Crear Marca</DrawerHeader>
           <ModalCloseButton />
           <DrawerBody>
-          <form onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             
             <Input {...register("nombre")} placeholder="nombre de la marca" required />
 
@@ -33,3 +88,4 @@ export default function DrawerMarca(){
         </>
     )
 }
+

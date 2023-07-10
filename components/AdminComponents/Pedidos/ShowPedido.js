@@ -8,11 +8,20 @@ import { chakra,Box,SimpleGrid,Stat,StatLabel,Flex,StatNumber,useColorModeValue,
     PopoverCloseButton,
     Text,
     Badge,
-    Avatar
+    Avatar,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogContent,
+    AlertDialogOverlay,
+    useDisclosure,
+    useToast
       } from "@chakra-ui/react";
   import { BsPerson } from "react-icons/bs";
   import { GoLocation } from 'react-icons/go';
-  import { FiTrendingUp } from "react-icons/fi";
+  import { FiTrendingUp,FiCheck } from "react-icons/fi";
+  import { useRef } from "react";
 
 export default function ShowPedido({pedido}){
 
@@ -49,6 +58,7 @@ export default function ShowPedido({pedido}){
                   stat={`$ ${pedido.total}`}
                   icon={<FiTrendingUp size={'3em'} />}
                 />
+                <MarcarCompletado idPedido={pedido.idPedido}/>
               </SimpleGrid>
             </Box>
     </>
@@ -174,4 +184,91 @@ function StatsCard(props) {
   
       </Stat>
     );
+  }
+
+
+  function MarcarCompletado({idPedido}) {
+    const toast = useToast();
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = useRef()
+    const fetcherPut = async (url) => {
+        try {
+          const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-app-token': 'prueba123',
+            }
+          });
+          const responseData = await response.json();
+          return responseData;
+        } catch (error) {
+          console.error('Error al enviar los datos:', error);
+          throw new Error('Error al enviar los datos');
+        }
+      };
+
+      const refreshPage = ()=>{
+        window.location.reload();
+     }
+
+    async function FnCambiarEstado(id){
+
+        try {
+            const response = await fetcherPut(`https://hor5.bsite.net/api/pedidos/${id}/marcarCompletado`);
+            onClose()
+              toast({
+                title: 'Operación exitosa',
+                description: "El estado del pedido cambió a completado.",
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+              });
+            refreshPage();
+            console.log('Respuesta del servidor:', response);
+          } catch (error) {
+            toast({
+                title: 'Algo salió mal.',
+                description: "No se pudo cambiar el estado del pedido, vuelve a intentar más tarde.",
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+              });
+            console.error('Error al enviar los datos:', error);
+          }
+    }
+    return (
+      <>
+      <Button colorScheme="teal" onClick={()=>{onOpen()}} rounded='full'>Marcar como completado  <FiCheck/></Button>
+      
+  
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                Cambiar estado del pedido
+              </AlertDialogHeader>
+  
+              <AlertDialogBody>
+                ¿Está seguro de que quiere marcar el pedido #{idPedido} como completado? .<br/> 
+                Una vez actualizado el estado no se va a poder volver al estado anterior, esta acción tendrá efectos permanentes.
+              </AlertDialogBody>
+  
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button colorScheme='teal' onClick={()=>FnCambiarEstado(idPedido)} ml={3}>
+                  Confirmar
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      </>
+    )
   }

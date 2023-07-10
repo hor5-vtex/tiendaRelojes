@@ -1,4 +1,5 @@
 import Sidebar from "@/components/AdminComponents/AdminSidebar";
+import BarraInfo from "@/components/AdminComponents/Pedidos/BarraInfo";
 import ShowPedido from "@/components/AdminComponents/Pedidos/ShowPedido";
 import { Center,
        Heading,
@@ -17,6 +18,7 @@ export default function PedidosPage({pedidos}){
             <Center>
                 <Heading>Pedidos</Heading>
             </Center>
+            <BarraInfo p={3} pedidos={pedidos}/>
             {pedidos.length!=0?
             pedidos.map(pedido=>
               <ShowPedido pedido={pedido}/>
