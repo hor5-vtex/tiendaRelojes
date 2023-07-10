@@ -23,7 +23,7 @@ export default function Checkout({productosCarrito,total,vaciarCarrito}){
     return(
         <>
 
-            <SimpleGrid columns={[1, null, 2]} spacing='40px'>
+            <SimpleGrid columns={[1, null, 2]} spacing={10}>
                 <CheckoutForm completarCompra={completarCompra} productosCarrito={productosCarrito}/>
                 <ListaProductosCheckout productosCarrito={productosCarrito} />
             </SimpleGrid>

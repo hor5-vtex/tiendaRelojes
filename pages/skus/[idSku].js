@@ -125,6 +125,9 @@ export default function PaginaProducto({producto,variaciones,precioDolar,agregar
 
 
               </HStack>
+              
+                <Button my={10} isDisabled={producto.stock<=0} colorScheme="blue" mb={20} onClick={()=>{agregarCarrito(producto)}}>Agregar al carrito</Button>
+            
             </motion.div>
 
         </SimpleGrid>
@@ -132,9 +135,7 @@ export default function PaginaProducto({producto,variaciones,precioDolar,agregar
           </VStack>
         </HStack>
         
-        <Center>
-            <Button isDisabled={producto.stock<=0} colorScheme="blue" mb={20} onClick={()=>{agregarCarrito(producto)}}>Agregar al carrito</Button>
-        </Center>
+
 
       </Box>
 
