@@ -23,6 +23,10 @@ export default function DrawerEspecificacion({ idCategoria }) {
   const [valores, setValores] = useState([]);
   const toast = useToast();
 
+  const refreshPage = ()=>{
+    window.location.reload();
+ }
+
   const onSubmit = (data) => {
     const dataToSend = {
       especificacion: {
@@ -56,6 +60,7 @@ export default function DrawerEspecificacion({ idCategoria }) {
         });
         onClose();
         reset();
+        refreshPage()
       })
       .catch((error) => {
         console.error("Error al enviar los datos:", error);

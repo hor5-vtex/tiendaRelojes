@@ -101,7 +101,15 @@ export default function CategoriasPage({categorias,subcategorias}){
                             {
                               Array.isArray(subcategoriasSeleccionadas)?
                               subcategoriasSeleccionadas.map(subcat=>
-                                  <Text key={subcat.idCategoria}>#{subcat.idCategoria} {subcat.nombre}</Text>
+                                <>
+                                <Flex justifyContent='space-between' mb={2}>
+
+                                  <Text key={subcat.idCategoria}>#{subcat.idCategoria} {subcat.nombre} </Text>
+                                  <EliminarSubcategoria idCategoria={subcat.idCategoria}/>
+                                  
+                                </Flex>
+                                <Divider mb={2}/>
+                                </>
                                 ):
                                 
                                 <Center>
@@ -138,11 +146,16 @@ export default function CategoriasPage({categorias,subcategorias}){
                               especificaciones.length!=0?
                               especificaciones.map(especificacion=>
                                 <>
+                                <Flex justifyContent="space-between">
+
                                   <Text>nombre : 
                                     <Badge>
                                     {especificacion.nombreEspecificacion}
                                     </Badge>
                                     </Text>
+                                    
+                                    <EliminarEspecificacion idEspecificacion={especificacion.idEspecificacion}/>
+                                </Flex>
                                   <Text as='b'>Valores Posibles</Text>
                                   {especificacion.valores.map(valor=>
                                     <>
@@ -150,18 +163,11 @@ export default function CategoriasPage({categorias,subcategorias}){
                                     </>
                                     )}
                                     <Divider/>
-                                    <Flex justifyContent='end'>
-
-                                      <DrawerEspecificacionesCategoria idCategoria={categoria.idCategoria} m={5}/>
-                                    </Flex>
                                 </>
                                 ):
                                 <>
                                   <Text as='b'> La categoria todavia no tiene especificaciones creadas</Text>
-                                  <Flex justifyContent='end'>
 
-                                    <DrawerEspecificacionesCategoria idCategoria={categoria.idCategoria} m={5}/>
-                                  </Flex>
                                 </>
                                 :
                                 <Center>
@@ -169,6 +175,11 @@ export default function CategoriasPage({categorias,subcategorias}){
                                     <Spinner color='teal.500' />
                                 </Center>
                             }
+                             <Flex justifyContent='end' mt={2}>
+
+                                <DrawerEspecificacionesCategoria idCategoria={categoria.idCategoria} m={5}/>
+                             </Flex>
+                            
                           </PopoverBody>
                         </PopoverContent>
                       </Popover>
@@ -285,6 +296,180 @@ function EliminarCategoria({idCategoria}) {
                 Cancelar
               </Button>
               <Button colorScheme='red' onClick={()=>FnEliminarCategoria(idCategoria)} ml={3}>
+                Eliminar
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
+  )
+}
+
+function EliminarSubcategoria({idCategoria}) {
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef()
+  const fetcherDelete = async (url) => {
+      try {
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-app-token': 'prueba123',
+          }
+        });
+        const responseData = await response.json();
+        return responseData;
+      } catch (error) {
+        console.error('Error al enviar los datos:', error);
+        throw new Error('Error al enviar los datos');
+      }
+    };
+
+    const refreshPage = ()=>{
+      window.location.reload();
+   }
+
+  async function FnEliminarSubcategoria(id){
+
+      try {
+          const response = await fetcherDelete(`https://hor5.bsite.net/api/subcategorias/${id}`);
+          onClose()
+            toast({
+              title: 'Subcategoria Eliminada',
+              description: "Subcategoria eliminada con exito.",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+          refreshPage();
+          console.log('Respuesta del servidor:', response);
+        } catch (error) {
+          toast({
+              title: 'Algo salió mal.',
+              description: "No se pudo eliminar la subcategoria, vuelve a intentar más tarde.",
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          console.error('Error al enviar los datos:', error);
+        }
+  }
+  return (
+    <>
+    <Button onClick={()=>{onOpen()}} size='sm' rounded='full' colorScheme='red' > 
+      <CiTrash/> 
+    </Button>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Eliminar Subcategoria
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              ¿Está seguro de eliminar la subcategoria #{idCategoria}?.<br/> 
+              Las categorias eliminadas no se pueden recuperar, esta acción tendrá efectos permanentes.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button colorScheme='red' onClick={()=>FnEliminarSubcategoria(idCategoria)} ml={3}>
+                Eliminar
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
+  )
+}
+
+function EliminarEspecificacion({idEspecificacion}) {
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef()
+  const fetcherDelete = async (url) => {
+      try {
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-app-token': 'prueba123',
+          }
+        });
+        const responseData = await response.json();
+        return responseData;
+      } catch (error) {
+        console.error('Error al enviar los datos:', error);
+        throw new Error('Error al enviar los datos');
+      }
+    };
+
+    const refreshPage = ()=>{
+      window.location.reload();
+   }
+
+  async function FnEliminarEspecificacion(id){
+
+      try {
+          const response = await fetcherDelete(`https://hor5.bsite.net/api/especificacion/${id}`);
+          onClose()
+            toast({
+              title: 'Especificacion Eliminada',
+              description: "Especificacion eliminada con exito.",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+          refreshPage();
+          console.log('Respuesta del servidor:', response);
+        } catch (error) {
+          toast({
+              title: 'Algo salió mal.',
+              description: "No se pudo eliminar la especificacion, vuelve a intentar más tarde.",
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          console.error('Error al enviar los datos:', error);
+        }
+  }
+  return (
+    <>
+    <Button onClick={()=>{onOpen()}} size='sm' rounded='full' colorScheme='red' > 
+      <CiTrash/> 
+    </Button>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Eliminar Especificación
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              ¿Está seguro de eliminar la especificacion #{idEspecificacion}?.<br/> 
+              Las especificaciones eliminadas no se pueden recuperar, esta acción tendrá efectos permanentes.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button colorScheme='red' onClick={()=>FnEliminarEspecificacion(idEspecificacion)} ml={3}>
                 Eliminar
               </Button>
             </AlertDialogFooter>
