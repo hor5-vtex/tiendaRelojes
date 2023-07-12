@@ -35,7 +35,9 @@ export default function DrawerSubcategoria({idCategoria}){
       };
 
       const onSubmit = async (data) => {
+      
         try {
+          data.idCategoriaPadre=idCategoria
           const response = await fetcherPost(`https://hor5.bsite.net/api/${idCategoria}/subcategoria/create`, data);
           onClose()
           reset()
@@ -74,14 +76,11 @@ export default function DrawerSubcategoria({idCategoria}){
       <Drawer placement='right' size="md" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth='1px'>Crear Categoria</DrawerHeader>
+          <DrawerHeader borderBottomWidth='1px'>Crear Subcategoria</DrawerHeader>
           <ModalCloseButton />
           <DrawerBody>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <InputGroup>
-                <InputLeftAddon children='#' />
-                <Input {...register("idCategoriaPadre")} value={idCategoria} disabled/>
-            </InputGroup>
+
             <Input {...register("nombre")} placeholder="nombre de la subcategoria" required />
 
             <DrawerFooter justifyContent='center'>

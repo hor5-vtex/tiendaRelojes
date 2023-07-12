@@ -83,9 +83,9 @@ export default function CategoriasPage({categorias,subcategorias}){
                 {categorias.map((categoria, index) => (
                   <Box key={index} backgroundColor='whiteAlpha.800' rounded='full'p={5}>
                     <VStack>
-                      <Text ontSize='xl'as='b' >#{categoria.idCategoria}</Text>
-                      <Text ontSize='xl'as='b' >{categoria.nombre}</Text>
-                      {subcategorias&&
+                      <Text size='xl'as='b' >#{categoria.idCategoria}</Text>
+                      <Text size='xl'as='b' >{categoria.nombre}</Text>
+                      {subcategorias&&subcategorias.length!=0&&
                       <>
                         <Popover>
                         <PopoverTrigger>
@@ -99,14 +99,16 @@ export default function CategoriasPage({categorias,subcategorias}){
                           <PopoverHeader>Listado de subcategorias de {categoria.nombre}</PopoverHeader>
                           <PopoverBody>
                             {
-                              subcategoriasSeleccionadas?
+                              Array.isArray(subcategoriasSeleccionadas)?
                               subcategoriasSeleccionadas.map(subcat=>
-                                  <Text>#{subcat.idCategoria} {subcat.nombre}</Text>
+                                  <Text key={subcat.idCategoria}>#{subcat.idCategoria} {subcat.nombre}</Text>
                                 ):
+                                
                                 <Center>
 
                                     <Spinner color='teal.500' />
                                 </Center>
+                                
                             }
                             <Flex justifyContent='end'>
 
@@ -180,24 +182,24 @@ export default function CategoriasPage({categorias,subcategorias}){
                 ))}
               </SimpleGrid>
                 :
-                <Text> No hay marcas creadas todavia</Text>
+                <Text> No hay categorias creadas todavia</Text>
               }
               </TabPanel>
               <TabPanel>
               {
-                subcategorias? 
+                subcategorias&&subcategorias.length!=0? 
                 <SimpleGrid columns={[1, null, 3]} spacing='40px' mb={100} mt={20}>
                 {subcategorias.map((subcategoria, index) => (
                   <Box key={index} backgroundColor='whiteAlpha.800' rounded='full'p={5}>
-                    <VStack>
-                      <Text ontSize='xl'as='b' >#{subcategoria.idCategoria}</Text>
-                      <Text ontSize='xl'as='b' >{subcategoria.nombre}</Text>
+                    <VStack key={index}>
+                      <Text size='xl'as='b' >#{subcategoria.idCategoria}</Text>
+                      <Text size='xl'as='b' >{subcategoria.nombre}</Text>
                     </VStack>
                   </Box>
                 ))}
               </SimpleGrid>
                 :
-                <Text> No hay marcas creadas todavia</Text>
+                <Text> No hay subcategorias creadas todavia</Text>
               }
               </TabPanel>
             </TabPanels>
